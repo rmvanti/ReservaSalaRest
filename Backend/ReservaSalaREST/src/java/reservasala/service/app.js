@@ -93,9 +93,10 @@ $(document).ready(function(){
                     line += '<td><span>'+json[i].meetingRoom.name+'</span></td>';
                     line += '<td><span>'+json[i].meetingRoom.description+'</span></td>';
                     line += json[i].meetingRoom.multimediaResources === true ? '<td><span>Sim</span></td>' : '<td><span>Não</span></td>';
-                    line += '<td><span>'+json[i].meetingRoom.capacity+'</span></td>';				
+                    line += '<td><span>'+json[i].meetingRoom.capacity+'</span></td>';			
                     line += '<td><span>'+json[i].startDate+'</span></td>';
                     line += '<td><span>'+json[i].endDate+'</span></td>';
+                    line += json[i].description === undefined || json[i].description === null ?'<td><span></span></td>' : '<td><span>'+json[i].description+'</span></td>' ;
                     //line += json[i].withCoffeeBreak === true ? '<td><span>Sim</span></td>' : '<td><span>Não</span></td>';
                     //line += '<td><span>'+json[i].numberOfPeople+'</span></td>';
                     line += '<td>';
@@ -119,6 +120,7 @@ $(document).ready(function(){
         modal.find(".requesterField").val('');
         modal.find(".startDateField").val('');
         modal.find(".endDateField").val('');
+        modal.find(".descriptionField").val('');
         modal.find(".coffeeField").prop('checked', false);
         modal.find(".numberOfPeopleField").val('');
         modal.find(".numberOfPeopleElement").hide();
@@ -137,7 +139,8 @@ $(document).ready(function(){
             "startDate": modalReserveForm.find('.startDateField').val(),
             "endDate": modalReserveForm.find('.endDateField').val(),
             "coffee": modalReserveForm.find('.coffeeField').prop('checked'),
-            "numberOfPeople": modalReserveForm.find('.numberOfPeopleField').val()
+            "numberOfPeople": modalReserveForm.find('.numberOfPeopleField').val(),
+            "description": modalReserveForm.find('.descriptionField').val()
         });
     }                
         
@@ -191,9 +194,9 @@ $(document).ready(function(){
             invocation.withCredentials = false;
             invocation.onreadystatechange  = function(){
                 if(invocation.readyState === 4 && invocation.status === 200){
-                    getGridData();                    
+                    getGridData();
                     alert("Reservas excluídas com sucesso!");
-                }                
+                }
             },
             invocation.send(ids);
         }

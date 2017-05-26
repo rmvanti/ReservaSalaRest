@@ -35,6 +35,7 @@ public class Reserve implements Serializable, IIdentifiable<Integer> {
     private String requester;
     private boolean withCoffeeBreak;
     private int numberOfPeople;
+    private String description;
         
     public Reserve(){}//fim construtor
 
@@ -96,18 +97,28 @@ public class Reserve implements Serializable, IIdentifiable<Integer> {
         this.requester = requester;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }        
+
     @Override
     public String toString() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
-        String message = "Id: %d, Solicitante: %s, %s, Inicia: %s, Encerra: %s, Coffe: %s, Pessoas: %d";
+        String message = "Id: %d, Solicitante: %s, %s, Inicia: %s, Encerra: %s, Coffe: %s, Pessoas: %d, Descrição: %s";
         return String.format(message,
                              getId(),
                              getRequester(),
-                             getMeetingRoom().toString(),                
-                             sdf.format(getStartDate()), 
-                             sdf.format(getEndDate()), 
-                             isWithCoffeeBreak() ? "Sim" : "Não", 
-                             getNumberOfPeople());
+                             getMeetingRoom().toString(),
+                             sdf.format(getStartDate()),
+                             sdf.format(getEndDate()),
+                             isWithCoffeeBreak() ? "Sim" : "Não",
+                             getNumberOfPeople(),
+                             getDescription()
+        );
     }
                                               
 }//fim class

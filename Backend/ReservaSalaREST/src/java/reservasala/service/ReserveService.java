@@ -76,7 +76,7 @@ public class ReserveService {
     
     @DELETE
     @Path("/{id}")
-    @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
     public Response deleteReserve(@PathParam("id") int id) {
         this.daoReserve.deleteById(id);
         return Response.ok()
@@ -86,16 +86,14 @@ public class ReserveService {
     }
     
     @DELETE
-    @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response deleteReserve(String param) {
         String[] ids = param.split(",");
         Reserve r = null;
         for (String id : ids) {
             r = this.daoReserve.findById(Integer.parseInt(id));            
             this.daoReserve.delete(r);
-        }
-        
-        //this.daoReserve.deleteById(id);
+        }                
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")                                
                 .header("Origin", "localhost/MeetingRoomReserve")
@@ -111,7 +109,7 @@ public class ReserveService {
         String[] split = v.split(",");
     
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Reserve r = new Reserve();                        
+        Reserve r = new Reserve();                
         for (int i = 0; i < split.length; i++) {
             switch (split[i].split(":")[0]) {
                 case "id": break;
@@ -156,6 +154,15 @@ public class ReserveService {
                     }
                     r.setNumberOfPeople(Integer.parseInt(number));
                     break;
+                    case "description":
+                        String desc;
+                        if(split[i].split(":").length == 1){
+                            desc = "";
+                        }else{
+                            desc = split[i].split(":")[1];
+                        }
+                        r.setDescription(desc);
+                        break;
                 default: break;
             }            
         }
