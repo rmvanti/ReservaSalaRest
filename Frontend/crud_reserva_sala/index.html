@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt_BR">
+	<head>
+		<meta charset="UTF-8">
+		<title>Crud Reserva</title>
+		
+		<link href="css/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+				
+		<script src="js/jquery.js" type="text/javascript"></script>
+		<script src="css/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+		<script src="js/app.js" type="text/javascript"></script>			
+	</head>
+	
+	<body>
+		<div class="container-fluid">			
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<form style="float: right; padding-bottom: 15px; padding-top: 15px; margin-right: 15px;">
+							<button class="btn btn-danger btn-sm btnDeleteList">Remover selecinados</button>
+							<button type="button" class="btn btn-success btn-sm btnOpenModal">Adicionar</button>
+						</form>
+					<div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<table id="reserveTable" class="table table-responsive table-striped">
+							<thead>
+								<th></th>
+								<th></th>
+								<th>Solicitante</th>
+								<th>Sala</th>
+								<th>Multimídia</th>
+								<th>Capacidade</th>
+								<th>Inicio</th>
+								<th>Fim</th>							
+								<th>Café</th>
+								<th>Pessoas</th>
+								<th>Ações</th>
+							</thead>
+							<tbody>
+								<!-- Dados serão carregados via GET -->														
+							</tbody>
+						</table>
+					</div>
+				</div>			
+			</div>	
+			<footer class="footer">
+			</footer>
+			
+			<div class="modal fade" id="reserveCrudModal" tabindex="-1" role="dialog" aria-labelledby="reserveCrudModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="reserveCrudModalLabel">Reserva</h4>
+						</div>
+						<div class="modal-body">
+							<form id="reserveForm">
+								<input type="hidden" class="reserveIdField" value=""/>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="">Local</label>
+											<!--<input name="placeId" type="text" class="form-control placeIdField" placeholder="Local" value="" required="true"/>-->
+											<select class="form-control placeIdField" placeholder="Local">
+												<!-- Dados serão carregados via GET -->
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="">Sala</label>
+											<input name="meetingRoomId" type="text" class="form-control meetingRoomField" placeholder="Sala" value="" required="true"/>										
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="">Solicitante</label>									
+											<input name="requester" type="text" class="form-control requesterField" placeholder="Solicitante" value="" required="true"/>										
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="">Início</label>									
+											<input name="startDate" type="datetime-local" class="form-control startDateField" value="" required="true"/>				
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="">Fim</label>									
+											<input name="endDate" type="datetime-local" class="form-control endDateField" value="" required="true"/>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label> Café</label>
+											<div class="form-control">																												
+												<input class="checkCoffe coffeeField" name="coffe" type="checkbox" value="false" />
+											</div>										
+										</div>
+									</div>
+									<div class="col-sm-2 numberOfPeopleElement">
+										<div class="form-group">
+											<label>Pessoas</label>									
+											<input name="numberOfPeople" type="number" min="0" class="form-control numberOfPeopleField" value="false"/>										
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+							<button type="button" class="btn btn-primary btnModalSave">Salvar</button>
+							<button type="button" class="btn btn-primary btnModalUpdate">Atualizar</button>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+		<button type="button" class="btn btn-primary btnTeste">Teste</button>
+		<button type="button" class="btn btn-primary btnTeste2">Teste2</button>
+	</body>
+</html>
