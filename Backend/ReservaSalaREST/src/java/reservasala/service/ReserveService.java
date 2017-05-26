@@ -8,8 +8,10 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,13 +43,15 @@ public class ReserveService {
     }//fim construtor
     
     @GET
-    @Produces()
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}")
-    public Reserve getReserve(@PathParam("id") int id) {
-        Reserve r = this.daoReserve.findById(id);        
-        return r;
-    }
-      
+    public Response getReserve(@PathParam("id") int id) {
+        Reserve r = this.daoReserve.findById(id);
+        return Response.ok().entity(r)
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Origin", "localhost/MeetingRoomReserve")
+                .build();
+    }      
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)    
@@ -58,8 +62,8 @@ public class ReserveService {
                 .build();
     }
 
-    @POST
-    @Path("/edit/{id}")
+    @PUT
+    @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED})
     @Produces()
     public Reserve updateReserve(@PathParam("id") int id, String json){
@@ -69,16 +73,19 @@ public class ReserveService {
         return r;
     }
     
-    @POST
-    @Path("/delete/{id}")
+    @DELETE
+    @Path("/{id}")
     @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
     public Response deleteReserve(@PathParam("id") int id) {
         this.daoReserve.deleteById(id);
-        return Response.ok().build();
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Origin", "localhost/MeetingRoomReserve")
+                .build();
     }
       
     @POST
-    @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})    
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})    
     public Response insertReserve(String value) {
         String v = value.replace("\"", "");
         v = v.replace("{","");
@@ -123,20 +130,22 @@ public class ReserveService {
                     }
                     break;
                 case "numberOfPeople":
-                    r.setNumberOfPeople(Integer.parseInt(split[i].split(":")[1]));
+                    String number;
+                    if(split[i].split(":").length == 1){
+                        number = "0";
+                    }else{
+                        number = split[i].split(":")[1];
+                    }
+                    r.setNumberOfPeople(Integer.parseInt(number));
                     break;
                 default: break;
             }            
         }
         this.daoReserve.insert(r);
-        return Response.ok().build();
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Origin", "localhost/MeetingRoomReserve")
+                .build();
     }    
-    
-    @GET
-    @Path("/places")
-    @Produces()
-    public Response getPlaces(){
-        return Response.ok(new GenericEntity<List<Place>>(this.daoPlace.findAll()){}).build();        
-    }
     
 }//fim class

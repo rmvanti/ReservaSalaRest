@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
 import reservasala.control.dao.IIdentifiable;
 
@@ -15,6 +17,9 @@ import reservasala.control.dao.IIdentifiable;
  */
 @XmlRootElement
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "MeetingRoom.findByPlace", query = "select mr from MeetingRoom mr where mr.place=:place")
+})
 public class MeetingRoom implements Serializable, IIdentifiable<Integer> {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
