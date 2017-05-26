@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -79,7 +80,18 @@ public class ReserveService {
     public Response deleteReserve(@PathParam("id") int id) {
         this.daoReserve.deleteById(id);
         return Response.ok()
-                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Origin", "*")                                
+                .header("Origin", "localhost/MeetingRoomReserve")
+                .build();
+    }
+    
+    @DELETE    
+    @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
+    public Response deleteReserve(String param) {
+        System.out.println(param);
+        //this.daoReserve.deleteById(id);
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")                                
                 .header("Origin", "localhost/MeetingRoomReserve")
                 .build();
     }
@@ -146,6 +158,17 @@ public class ReserveService {
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Origin", "localhost/MeetingRoomReserve")
                 .build();
-    }    
+    }            
+    
+    @OPTIONS
+    @Path("/{id}")
+    public Response getOptions(){
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Origin", "localhost/MeetingRoomReserve")
+                .build();
+    }
     
 }//fim class
