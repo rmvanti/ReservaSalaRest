@@ -4,7 +4,6 @@ package reservasala.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import reservasala.control.dao.DaoImpl;
@@ -15,7 +14,8 @@ import reservasala.control.dao.IDao;
  */
 public class ModelTest {
     
-    public static void main(String[] args) throws ParseException {
+    public static void loadDataBase() {
+        try{
         EntityManager em = Persistence.createEntityManagerFactory("ReservaSalaRESTPU").createEntityManager();
         IDao<Place,Integer> daoPlace = new DaoImpl(Place.class, em);
         IDao<MeetingRoom,Integer> daoRoom = new DaoImpl(MeetingRoom.class, em);
@@ -166,7 +166,7 @@ public class ModelTest {
         daoReserve.insert(rs);                
         
         /* ****************************************************************** */
-        System.out.println("");
+        /*System.out.println("");
         List<Reserve> reservas = daoReserve.findAll();        
         for (Reserve reserva : reservas) {
             System.out.println(reserva.toString());
@@ -174,8 +174,12 @@ public class ModelTest {
         
         pc = daoPlace.findById(1);
         System.out.println("");
-        System.out.println("Local: " + pc.getName() +", Salas: " +pc.getRooms().size()+";");
+        System.out.println("Local: " + pc.getName() +", Salas: " +pc.getRooms().size()+";");*/
         
+        em.close();
+        }catch(ParseException ex){
+            System.out.println("Erro na carga de dados!!");
+        }
     }//fim main
     
 }//fim class

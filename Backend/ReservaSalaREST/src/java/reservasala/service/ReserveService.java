@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import reservasala.control.dao.DaoImpl;
 import reservasala.control.dao.IDao;
 import reservasala.model.MeetingRoom;
+import reservasala.model.ModelTest;
 import reservasala.model.Place;
 import reservasala.model.Reserve;
 
@@ -40,8 +41,11 @@ public class ReserveService {
         this.manager = Persistence.createEntityManagerFactory("ReservaSalaRESTPU").createEntityManager();
         this.daoReserve = new DaoImpl(Reserve.class, this.manager);
         this.daoRoom = new DaoImpl(MeetingRoom.class, this.manager);
-        this.daoPlace = new DaoImpl(Place.class, this.manager);        
-    }//fim construtor
+        this.daoPlace = new DaoImpl(Place.class, this.manager); 
+        if(this.daoPlace.findAll().isEmpty()){            
+            ModelTest.loadDataBase();
+        }
+    }//fim construtor        
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)

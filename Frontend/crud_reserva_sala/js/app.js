@@ -19,7 +19,9 @@ $(document).ready(function(){
 
     var modal = $('#reserveCrudModal');
     var modalReserveForm = modal.find('#reserveForm');
-
+    
+    var modalConfirmDelete = $('#confirmDeleteModal');
+        
     var tbody = $('table').find('tBody');
 
     function getRoomsData(placeId){                    
@@ -133,19 +135,9 @@ $(document).ready(function(){
         modal.find(".reserveIdField").val(json.id);
         modal.find(".requesterField").val(json.requester);
         
-        var ano = json.startDate.toLocaleString().substring(0,4);
-        var dia = json.startDate.toLocaleString().substring(8,10);
-        var mes = json.startDate.toLocaleString().substring(5,7);
-        var horaMinuto = json.startDate.toLocaleString().substring(11,16);
-        var temp = dia+'/'+mes+'/'+ano+' '+horaMinuto;
-        modal.find(".startDateField").value = json.startDate;
         
-        ano = json.endDate.toLocaleString().substring(0,4);
-        dia = json.endDate.toLocaleString().substring(8,10);
-        mes = json.endDate.toLocaleString().substring(5,7);
-        horaMinuto = json.endDate.toLocaleString().substring(11,16);
-        temp = dia+'/'+mes+'/'+ano+' '+horaMinuto;
-        modal.find(".endDateField").val(temp);
+        modal.find(".startDateField").value = json.startDate;                
+        modal.find(".endDateField").value = json.endDate;
         
         var desc = json.description === undefined || json.description === null ? "" : json.description; 
         modal.find(".descriptionField").val(desc);
@@ -176,6 +168,7 @@ $(document).ready(function(){
         ev.preventDefault();
         modal.find('.modal-title').html('Nova reserva');
         clearModalFields();
+        getPlacesData();
         modal.find('.btnModalSave').show();
         modal.find('.btnModalUpdate').hide();
         modal.modal('show');
@@ -184,17 +177,9 @@ $(document).ready(function(){
     tbody.on("click",".btnDelete", function(ev){ 
         ev.preventDefault();
         $this = $(this);
-        var url = urlToDelete.replace('{id}', $this.attr('data-id'));
-        var invocation = new XMLHttpRequest();
-        invocation.open('DELETE', url, true);
-        invocation.withCredentials = false;
-        invocation.onreadystatechange  = function(){
-            if(invocation.readyState === 4 && invocation.status === 200){
-                getGridData();
-                alert("Reserva excluída com sucesso!");
-            }
-        },
-        invocation.send();
+        modalConfirmDelete.find('.confirmDeleteById').val($this.attr('data-id'));
+        modalConfirmDelete.find('.confirmDeleteList').val('');
+        modalConfirmDelete.modal('show');        
     });
     
     tbody.on('click', '.btnEdit', function(ev){
@@ -219,7 +204,7 @@ $(document).ready(function(){
     });
     
     btnDeleteList.off().click(function(ev){
-        ev.preventDefault();        
+        ev.preventDefault();
         var rows = tbody.find('.rowCheck');
         var ids = '';
         var item;
@@ -229,20 +214,13 @@ $(document).ready(function(){
                 ids += item.attr('data-id')+",";
             }
         }
-        ids = ids.substring(0,(ids.length-1));
+        ids = ids.substring(0,(ids.length-1));        
         if(ids === ''){
             alert("Por favor selecione as reservas que devem ser excluídas!");
         }else{
-            var invocation = new XMLHttpRequest();
-            invocation.open('DELETE', urlToDeleteList, true);
-            invocation.withCredentials = false;
-            invocation.onreadystatechange  = function(){
-                if(invocation.readyState === 4 && invocation.status === 200){
-                    getGridData();
-                    alert("Reservas excluídas com sucesso!");
-                }
-            },
-            invocation.send(ids);
+            modalConfirmDelete.find('.confirmDeleteById').val('');
+            modalConfirmDelete.find('.confirmDeleteList').val(ids);
+            modalConfirmDelete.modal('show');                    
         }
     });
     
@@ -296,11 +274,42 @@ $(document).ready(function(){
         ev.preventDefault();
         $this = $(this);
         var field = $('.placeIdField');
-        getRoomsData(field.val());               
+        getRoomsData(field.val());
 
+    });
+    
+    modalConfirmDelete.on('click', '.btnConfirmDelete', function(ev){
+        ev.preventDefault();        
+        if(modalConfirmDelete.find('.confirmDeleteById').val() !== ''){
+            var url = urlToDelete.replace('{id}', modalConfirmDelete.find('.confirmDeleteById').val());
+            var invocation = new XMLHttpRequest();
+            invocation.open('DELETE', url, true);
+            invocation.withCredentials = false;
+            invocation.onreadystatechange  = function(){
+                if(invocation.readyState === 4 && invocation.status === 200){
+                    getGridData();
+                    alert("Reserva excluída com sucesso!");
+                    modalConfirmDelete.modal('hide');
+                }
+            },
+            invocation.send();        
+        }else{
+            var invocation = new XMLHttpRequest();
+            invocation.open('DELETE', urlToDeleteList, true);
+            invocation.withCredentials = false;
+            invocation.onreadystatechange  = function(){
+                if(invocation.readyState === 4 && invocation.status === 200){
+                    getGridData();
+                    alert("Reservas excluídas com sucesso!");
+                    modalConfirmDelete.modal('hide');
+                }
+            },
+            invocation.send(modalConfirmDelete.find('.confirmDeleteList').val());
+        }
+        
     });
                     				                        
     getGridData();
     getPlacesData();
-
+    
 });
