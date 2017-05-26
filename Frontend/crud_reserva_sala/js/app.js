@@ -3,10 +3,12 @@ $(document).ready(function(){
     //definição das URL's dos serviços
     var baseURL = 'http://localhost:8084/ReservaSalaREST/rest';
     
-    var urlToInsert  = baseURL + "/reserve";
-    var urlToGetList = baseURL + "/reserve";
+    var urlToInsert      = baseURL + "/reserve";
+    var urlToGetList     = baseURL + "/reserve";
+    var urlToDeleteList  = baseURL + "/reserve";
+    
     var urlToGetById = baseURL + "/reserve" + '/{id}';
-    var urlToDelete  = baseURL + "/reserve" + '/{id}';
+    var urlToDelete  = baseURL + "/reserve" + '/{id}';    
     var urlToUpdate  = baseURL + "/reserve" + '/{id}';
     
     var urlToGetPlaceList = baseURL + '/place';
@@ -85,16 +87,17 @@ $(document).ready(function(){
                     line = '<tr data-id="'+json[i].id+'">';
                     line += '<td><input type="hidden" value="'+json[i].id+'"></input></td>';
                     line += '<td>';
-                    line += '<input type="checkbox" value="false" data-id="'+json[i].id+'"/>';
+                    line += '<input type="checkbox" class="rowCheck" data-id="'+json[i].id+'"/>';
                     line += '</td>';
                     line += '<td><span>'+json[i].requester+'</span></td>';
                     line += '<td><span>'+json[i].meetingRoom.name+'</span></td>';
+                    line += '<td><span>'+json[i].meetingRoom.description+'</span></td>';
                     line += json[i].meetingRoom.multimediaResources === true ? '<td><span>Sim</span></td>' : '<td><span>Não</span></td>';
                     line += '<td><span>'+json[i].meetingRoom.capacity+'</span></td>';				
                     line += '<td><span>'+json[i].startDate+'</span></td>';
                     line += '<td><span>'+json[i].endDate+'</span></td>';
-                    line += json[i].withCoffeeBreak === true ? '<td><span>Sim</span></td>' : '<td><span>Não</span></td>';
-                    line += '<td><span>'+json[i].numberOfPeople+'</span></td>';
+                    //line += json[i].withCoffeeBreak === true ? '<td><span>Sim</span></td>' : '<td><span>Não</span></td>';
+                    //line += '<td><span>'+json[i].numberOfPeople+'</span></td>';
                     line += '<td>';
                     line += '<form>';
                     line += '<button class="btn btn-warning btn-xs btnEdit" data-id="'+json[i].id+'">Editar</button>';
@@ -168,6 +171,34 @@ $(document).ready(function(){
         alert('Botão edit.');
     });
     
+    btnDeleteList.off().click(function(ev){
+        ev.preventDefault();        
+        var rows = tbody.find('.rowCheck');
+        var ids = '';
+        var item;
+        for(var i = 0; i < rows.length; i++){
+            item = $(rows[i]);
+            if(item.prop('checked')){
+                ids += item.attr('data-id')+",";
+            }
+        }
+        ids = ids.substring(0,(ids.length-1));
+        if(ids === ''){
+            alert("Por favor selecione as reservas que devem ser excluídas!");
+        }else{
+            var invocation = new XMLHttpRequest();
+            invocation.open('DELETE', urlToDeleteList, true);
+            invocation.withCredentials = false;
+            invocation.onreadystatechange  = function(){
+                if(invocation.readyState === 4 && invocation.status === 200){
+                    getGridData();                    
+                    alert("Reservas excluídas com sucesso!");
+                }
+            },
+            invocation.send(ids);
+        }
+    });
+    
     //eventos dos elementos do modal
     modal.on("click",".btnModalSave", function(ev){
         if(checkModalFields()){
@@ -195,26 +226,18 @@ $(document).ready(function(){
                 modal.find('.numberOfPeopleElement').hide();
         }
     });
-    //--------------------------------------------------------------------------
-
-    //define os eventos dos botões da página				
-    btnDeleteList.off().click(function(ev){
-        ev.preventDefault();
-        alert("Delete list button pressed!");
-    });
-
-
+    //--------------------------------------------------------------------------      
     
     modal.on("click", ".btnModalUpdate", function(ev){
             var url = urlToUpdate.replace('{id}', modal.find('.reserveIdField').val());
             $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    url: url,
-                    data: modalFormToJson(),
-                    success: function(response){
-                            alert(response);
-                    } 
+				type: 'POST',
+				dataType: 'json',
+				url: url,
+				data: modalFormToJson(),
+				success: function(response){
+						alert(response);
+				} 
             });
             modal.modal('hide');
         });

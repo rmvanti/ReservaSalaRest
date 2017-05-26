@@ -85,10 +85,16 @@ public class ReserveService {
                 .build();
     }
     
-    @DELETE    
-    @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON, MediaType.TEXT_HTML})
+    @DELETE
+    @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response deleteReserve(String param) {
-        System.out.println(param);
+        String[] ids = param.split(",");
+        Reserve r = null;
+        for (String id : ids) {
+            r = this.daoReserve.findById(Integer.parseInt(id));            
+            this.daoReserve.delete(r);
+        }
+        
         //this.daoReserve.deleteById(id);
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")                                
@@ -163,6 +169,16 @@ public class ReserveService {
     @OPTIONS
     @Path("/{id}")
     public Response getOptions(){
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Origin", "localhost/MeetingRoomReserve")
+                .build();
+    }
+    
+    @OPTIONS    
+    public Response getOptionsBase(){
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS, HEAD")
