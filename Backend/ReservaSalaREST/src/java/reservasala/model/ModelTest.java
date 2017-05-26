@@ -24,10 +24,15 @@ public class ModelTest {
         /* ****************************************************************** */
         Place pc = new Place();
         pc.setName("Banana Ltda.");        
+        daoPlace.insert(pc);        
+        
+        pc = new Place();
+        pc.setName("Melancia Ltda.");        
         daoPlace.insert(pc);
+                
+        /* ****************************************************************** */
         pc = daoPlace.findById(1);
         
-        /* ****************************************************************** */
         MeetingRoom mr = new MeetingRoom();
         mr.setCapacity(15);
         mr.setName("SR-07");
@@ -87,6 +92,41 @@ public class ModelTest {
         daoRoom.insert(mr);
         pc.addRoom(mr);
         daoPlace.update(pc);
+        
+        /* ****************************************************************** */
+        pc = daoPlace.findById(2);
+        
+        mr = new MeetingRoom();
+        mr.setCapacity(43);
+        mr.setName("TX-07");
+        mr.setMultimediaResources(true);
+        mr.setDescription("Sala de reuniões número 7. Possui recurso multimídia");
+        mr.setPlace(pc);        
+        daoRoom.insert(mr);
+        pc.addRoom(mr);
+        daoPlace.update(pc);
+        
+        
+        mr = new MeetingRoom();
+        mr.setCapacity(35);
+        mr.setName("TX-08");
+        mr.setMultimediaResources(true);
+        mr.setDescription("Sala de reuniões número 7. Possui recurso multimídia");
+        mr.setPlace(pc);        
+        daoRoom.insert(mr);
+        pc.addRoom(mr);
+        daoPlace.update(pc);
+        
+        mr = new MeetingRoom();
+        mr.setCapacity(80);
+        mr.setName("RX-17");
+        mr.setMultimediaResources(true);
+        mr.setDescription("Sala de reuniões número 7. Possui recurso multimídia");
+        mr.setPlace(pc);        
+        daoRoom.insert(mr);
+        pc.addRoom(mr);
+        daoPlace.update(pc);
+        
         
         /* ****************************************************************** */
         Reserve rs = new Reserve();

@@ -33,7 +33,8 @@ $(document).ready(function(){
                 var json = invocation.response;
                 var line = '';
                 var first = true;
-                json = typeof json === 'string' ? JSON.parse(json) : json;                               
+                json = typeof json === 'string' ? JSON.parse(json) : json;
+                field.find('option').remove();
                 for(var i = 0; i < json.length; i++){
                     if(first){
                         line = '<option value="' + json[i].id  + '" selected >' + json[i].name +'</option>';
@@ -126,6 +127,33 @@ $(document).ready(function(){
         modal.find(".numberOfPeopleElement").hide();
     };
     
+    function loadModalForm(json){
+        modal.find(".placeIdField").val(json.meetingRoom.place.id);
+        modal.find(".meetingRoomField").val(json.meetingRoom.id);       
+        modal.find(".reserveIdField").val(json.id);
+        modal.find(".requesterField").val(json.requester);
+        
+        var ano = json.startDate.toLocaleString().substring(0,4);
+        var dia = json.startDate.toLocaleString().substring(8,10);
+        var mes = json.startDate.toLocaleString().substring(5,7);
+        var horaMinuto = json.startDate.toLocaleString().substring(11,16);
+        var temp = dia+'/'+mes+'/'+ano+' '+horaMinuto;
+        modal.find(".startDateField").value = json.startDate;
+        
+        ano = json.endDate.toLocaleString().substring(0,4);
+        dia = json.endDate.toLocaleString().substring(8,10);
+        mes = json.endDate.toLocaleString().substring(5,7);
+        horaMinuto = json.endDate.toLocaleString().substring(11,16);
+        temp = dia+'/'+mes+'/'+ano+' '+horaMinuto;
+        modal.find(".endDateField").val(temp);
+        
+        var desc = json.description === undefined || json.description === null ? "" : json.description; 
+        modal.find(".descriptionField").val(desc);
+        
+        modal.find(".coffeeField").prop('checked', json.withCoffeeBreak);
+        modal.find(".numberOfPeopleField").val(json.numberOfPeople);        
+    }
+    
     function checkModalFields(){
         return modal.find(".requesterField").val() && modal.find(".startDateField").val() && modal.find(".endDateField").val();
     }
@@ -171,7 +199,23 @@ $(document).ready(function(){
     
     tbody.on('click', '.btnEdit', function(ev){
         ev.preventDefault();
-        alert('Botão edit.');
+        $this = $(this);
+        var url = urlToGetById.replace('{id}', $this.attr('data-id'));
+        
+        var invocation = new XMLHttpRequest();
+        invocation.open('GET', url, true);
+        invocation.withCredentials = false;
+        invocation.onreadystatechange  = function(){
+            if(invocation.readyState === 4 && invocation.status === 200){
+                var json = invocation.response;                
+                json = typeof json === 'string' ? JSON.parse(json) : json;
+                loadModalForm(json);
+                modal.find('.btnModalSave').hide();
+                modal.find('.btnModalUpdate').show();
+                modal.modal('show');
+            }
+        },
+        invocation.send();
     });
     
     btnDeleteList.off().click(function(ev){
@@ -204,6 +248,7 @@ $(document).ready(function(){
     
     //eventos dos elementos do modal
     modal.on("click",".btnModalSave", function(ev){
+        ev.preventDefault();
         if(checkModalFields()){
             var invocation = new XMLHttpRequest();
             invocation.open('POST', urlToInsert, true);
@@ -222,6 +267,7 @@ $(document).ready(function(){
     });
 
     modal.on("change",".checkCoffe", function(ev){
+        ev.preventDefault();
         $this = $(this);
         if($this.prop('checked')){
                 modal.find('.numberOfPeopleElement').show();
@@ -229,41 +275,31 @@ $(document).ready(function(){
                 modal.find('.numberOfPeopleElement').hide();
         }
     });
-    //--------------------------------------------------------------------------      
     
     modal.on("click", ".btnModalUpdate", function(ev){
-            var url = urlToUpdate.replace('{id}', modal.find('.reserveIdField').val());
-            $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    url: url,
-                    data: modalFormToJson(),
-                    success: function(response){
-                            alert(response);
-                    } 
-            });
-            modal.modal('hide');
-        });
-        				        
-        modal.on("change", ".placeIdField", function(ev){
-            $this = $(this);
-            var field = $('.meetingRoomField');
-            getRoomsData(field.val());
-            
-            //pegar a opção ativa
-            //obter o id do place
-            /*var invocation = new XMLHttpRequest();
-            invocation.open('GET', url, true);
-            invocation.withCredentials = false;
-            invocation.onreadystatechange  = function(){
-                if(invocation.readyState === 4 && invocation.status === 200){                                                            
-                    getRoomsData(1);//TODO: pegar o id da opção selecionada
-                }                
-            },
-            invocation.send();            */
-            
-        });
-        
+        ev.preventDefault();
+        var url = urlToUpdate.replace('{id}', modal.find('.reserveIdField').val());
+        var invocation = new XMLHttpRequest();
+        invocation.open('PUT', url, true);
+        invocation.withCredentials = false;
+        invocation.onreadystatechange  = function(){
+            if(invocation.readyState === 4 && invocation.status === 200){
+                getGridData();           
+                modal.modal('hide');
+                alert("Reserva atualizada com sucesso!");
+            }                
+        },
+        invocation.send(modalFormToJson());        
+    });
+    
+    modal.on("change", ".placeIdField", function(ev){
+        ev.preventDefault();
+        $this = $(this);
+        var field = $('.placeIdField');
+        getRoomsData(field.val());               
+
+    });
+                    				                        
     getGridData();
     getPlacesData();
 
