@@ -31,5 +31,5 @@ O projeto java foi implementado com netbeans, mysql, tomcat.
 19 - Abra o arquivo index.html que se encontra no diretório frontend/crud_reserva_sala no seu navegador (se póssivel o gogle chrome). <br>
 
 Obs: Se por qualquer motivo a porta 8084 estiver indisponível, selecione uma porta que esteja disponível para o servidor e altere a url do serviço no script app.js (esta no diretório reservaSalaRest/frontend/crud_reserva-sala/js).
-Na linha 4 será incontrada a seguinte instrução: var baseURL = 'http://localhost:8084/ReservaSalaREST/rest';
+Na linha 4 será encontrada a seguinte instrução: var baseURL = 'http://localhost:8084/ReservaSalaREST/rest';
 Altere o número 8084 para o número da porta que esteja disponível que você escolheu. 
