@@ -7,11 +7,11 @@ Na pasta frontend esta o cliente implementado em javascript.
 
 O projeto java foi implementado com netbeans, mysql, tomcat.
 
-1 - Baixe o projeto e descompacte-o em um diretório de sua preferência;
-2 - Crie um novo schema no mysql chamado reservasalarest;
-3 - Inicie o netbeans;
-4 - Selecione a opção abrir projeto;
-5 - Selecione o diretório do projeto que devera estar em backend/ReservaSalaRest;
+1 - Baixe o projeto e descompacte-o em um diretório de sua preferência;<br>
+2 - Crie um novo schema no mysql chamado reservasalarest;<br>
+3 - Inicie o netbeans;<br>
+4 - Selecione a opção abrir projeto;<br>
+5 - Selecione o diretório do projeto que devera estar em backend/ReservaSalaRest;<br>
 6 - Acesse no netbeans a aba serviços, caso ela não esteja visível selecione na barra de menus a opção ferramentas->serviços;<br>
 7 - No item banco de dados crie uma nova conexão com uma base mysql;<br>
 7.1 - Selecione o driver do mysql;<br>
